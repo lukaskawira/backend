@@ -91,6 +91,7 @@ func (c *ReservationController) Get() {
 // @Title GetResByCustomerID
 // @Description get reservation data by customerid
 // @Param	cid path string true "CustomerID as parameter"
+// @Success {string} Data obtained successfully
 // @router /gcust/:cid [get]
 func (c *ReservationController) GetResByCustomerID() {
 	//Connect to database
@@ -100,6 +101,29 @@ func (c *ReservationController) GetResByCustomerID() {
 	if cusid != "" {
 		//NOT EMPTY STRING
 		r, err := bm.GetReservationByCustomerID(cusid,pg_db)
+		if err != nil {
+			errCode := helpers.ErrorCode(err.Error())
+			c.Ctx.ResponseWriter.WriteHeader(errCode)
+			c.Data["json"] = err.Error()
+		}else{
+			c.Data["json"] = r
+		}
+	}
+	c.ServeJSON()
+}
+
+// @Title GetRess
+// @Description get reservation data by customerid for multiple rows
+// @Param	cid path string true "CustomerID as parameter"
+// @router /gcusts/:cid [get]
+func (c *ReservationController) GetRess() {
+	//Connect to database
+	pg_db := db.Connect()
+
+	cusid := c.GetString(":cid")
+	if cusid != "" {
+		//NOT EMPTY STRING
+		r, err := bm.GetRess(cusid,pg_db)
 		if err != nil {
 			errCode := helpers.ErrorCode(err.Error())
 			c.Ctx.ResponseWriter.WriteHeader(errCode)

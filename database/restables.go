@@ -108,3 +108,22 @@ func (r *ReservationTable) GetResByCustomerID(db *pg.DB) (*ReservationTable, err
 		return r, nil
 	}
 }
+
+//Get reservation by reservation id, multiple rows
+func (r *ReservationTable) GetRess(db *pg.DB) ([]*ReservationTable, error) {
+	result := []*ReservationTable{}
+	err := db.Model(r).
+		Where("customerid = ?customerid").
+		ForEach(func(t *ReservationTable) error {
+			log.Println(t)
+			result = append(result, t)
+			return nil
+		})
+	if err != nil {
+		log.Printf("error getting reservation by id, because : %v\n", err)
+		return nil, err
+	}else{
+		log.Printf("get reservation successful for %v\n", r.ReservationID)
+		return result, nil
+	}
+}

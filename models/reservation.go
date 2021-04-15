@@ -101,3 +101,18 @@ func GetReservationByCustomerID(cusid string, ref * pg.DB) (*db.ReservationTable
 		return r, nil
 	}
 }
+
+//Find an Existing Reservation by CustomerID
+func GetRess(cusid string, ref * pg.DB) ([]*db.ReservationTable, error) {
+	//Get a reservation by ReservationID
+	res := &db.ReservationTable{
+		CustomerID: cusid,
+	}
+
+	result, err := res.GetRess(ref)
+	if err != nil {
+		return nil, err
+	}else{
+		return result, nil
+	}
+}
