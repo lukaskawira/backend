@@ -20,6 +20,15 @@ func Connect() *pg.DB {
 		os.Exit(100)
 	}
 	log.Println("connection to database successful")	//connected to database
-	// CreateReservationTable(db)
+	createTable(db)
 	return db
+}
+
+func createTable(p *pg.DB) error {
+
+	//Init Table
+	CreateCustomerTable(p)
+	CreateReservationTable(p)
+
+	return nil
 }

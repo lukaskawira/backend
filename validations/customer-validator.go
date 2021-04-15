@@ -33,3 +33,13 @@ func CustomerValidator(r *models.Customer) error {
 	return nil
 }
 
+func LoginValidator(r *models.Customer) error {
+	if r.CustomerID == "" {
+		return errors.New("email is required")
+	}
+	if r.Password == "" {
+		return errors.New("password is required")
+	}
+	return nil
+}
+

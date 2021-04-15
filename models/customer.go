@@ -20,11 +20,11 @@ import (
 */
 type Customer struct {
 	CustomerID	string		
-	FirstName   string 		`json:"Guestname"`
-	Lastname  	string 		`json:"Numberofpeople"`
+	FirstName   string 		`json:"Firstname"`
+	Lastname  	string 		`json:"Lastname"`
 	Password	string		`json:"Password"`
-	Email     	string 		`json:"Phonenumber"`
-	Phonenumber string 		`json:"Email"`
+	Email     	string 		`json:"Email"`
+	Phonenumber string 		`json:"Phonenumber"`
 }
 
 //Registration
@@ -37,6 +37,7 @@ func InsertCustomer(r *Customer, ref * pg.DB) (string, error) {
 		Email: r.Email,
 		Phonenumber: r.Phonenumber,
 		Rescreated: time.Now(),
+		IsLogin: false,
 	}
 	result, err := res.SaveAndReturn(ref)
 	if err != nil {
@@ -61,10 +62,10 @@ func DeleteCustomer(cusid string, ref * pg.DB) (string, error) {
 	}
 }
 
-//Find an Existing Reservation
+//Find an Existing Customer
 func GetCustomerByID(cusid string, ref * pg.DB) (*db.CustomerTable, error) {
 
-	//Get a reservation by ReservationID
+	//Get a customer by customerID
 	res := &db.CustomerTable{
 		CustomerID: cusid,
 	}
@@ -74,5 +75,39 @@ func GetCustomerByID(cusid string, ref * pg.DB) (*db.CustomerTable, error) {
 		return nil, err
 	}else{
 		return r, nil
+	}
+}
+
+//Customer login
+func Login(r * Customer, ref * pg.DB) (*db.CustomerTable, error) {
+
+	//Update login status 
+	res := &db.CustomerTable{
+		CustomerID: r.CustomerID,
+		Password: r.Password,
+		IsLogin: true,
+	}
+
+	_ , err := res.Login(ref)
+	if err != nil {
+		return nil, err
+	} else {
+		return res, nil
+	}
+}
+
+//Customer logout
+func Logout(cusid string, ref * pg.DB) (*db.CustomerTable, error) {
+
+	//Update logout status 
+	res := &db.CustomerTable{
+		CustomerID: cusid,
+		IsLogin: false,
+	}
+	_ , err := res.Logout(ref)
+	if err != nil {
+		return nil, err
+	} else {
+		return res, nil
 	}
 }

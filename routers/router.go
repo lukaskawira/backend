@@ -21,7 +21,12 @@ func init() {
 				&controllers.ReservationController{},
 			),
 		),
+		beego.NSNamespace("/cus",
+			beego.NSInclude(
+				&controllers.CustomerController{},
+			),
+		),
 	)
 	beego.AddNamespace(ns)
-	beego.Router("/", &controllers.ReservationController{})
+	beego.Router("/", &controllers.MainController{})
 }

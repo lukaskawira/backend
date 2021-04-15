@@ -30,6 +30,7 @@ type CustomerTable struct {
 	Email           string 		`sql:"email"`
 	Phonenumber		string 		`sql:"phonenumber"`
 	Rescreated		time.Time	`sql:"datecreated"`
+	IsLogin			bool		`sql:"islogin"`
 }
 
 //Create customer table
@@ -93,6 +94,30 @@ func (r *CustomerTable) GetCust(db *pg.DB) (*CustomerTable, error) {
 	}else{
 		log.Printf("get customer successful for %v\n", r.CustomerID)
 		return r, nil
+	}
+}
+
+//Update customer login status
+func (r *CustomerTable) Login(db *pg.DB) (*CustomerTable, error) {
+	_ , err := db.Model(r).Set("islogin = ?islogin").Where("customerid = ?customerid AND password = ?password").Update()
+	if err != nil {
+		log.Printf("error updating login status, because : %v\n", err)
+		return nil, err
+	}else{
+		log.Printf("update login status successful for customer %v\n", r.CustomerID)
+		return r , nil
+	}
+}
+
+//Update customer login status
+func (r *CustomerTable) Logout(db *pg.DB) (*CustomerTable, error) {
+	_ , err := db.Model(r).Set("islogin = ?islogin").Where("customerid = ?customerid").Update()
+	if err != nil {
+		log.Printf("error updating logout status, because : %v\n", err)
+		return nil, err
+	}else{
+		log.Printf("update logout status successful for customer %v\n", r.CustomerID)
+		return r , nil
 	}
 }
 
