@@ -23,7 +23,7 @@ import (
 */
 type CustomerTable struct {
 	tableName 		struct{} 	`sql:"customer_table"`
-	CustomerID		string 		`sql:"custid,pk"`
+	CustomerID		string 		`sql:"customerid,pk"`
 	Firstname       string 		`sql:"firstname"`
 	Lastname  		string 		`sql:"lastname"`
 	Password	    string 		`sql:"password"`
@@ -109,7 +109,7 @@ func (r *CustomerTable) Login(db *pg.DB) (*CustomerTable, error) {
 	}
 }
 
-//Update customer login status
+//Update customer logout status
 func (r *CustomerTable) Logout(db *pg.DB) (*CustomerTable, error) {
 	_ , err := db.Model(r).Set("islogin = ?islogin").Where("customerid = ?customerid").Update()
 	if err != nil {

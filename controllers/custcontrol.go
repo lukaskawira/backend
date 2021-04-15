@@ -97,15 +97,14 @@ func (c *CustomerController) Get() {
 // @Description Get Customer Email and Password
 // @Success 200 {string} Login Successful!
 // @Failure 400 Login credential invalid
-// @router / [put]
+// @router /login [post]
 func (c *CustomerController) Login(){
 	//Connect to database
 	pg_db := db.Connect()
 
-	var data bm.Customer	//init a variable data with struct bm.customer
+	var data bm.CustomerLogin	//init a variable data with struct bm.customer
 	json.Unmarshal(c.Ctx.Input.RequestBody, &data) 	//&data is a json object
-	validationsError := validations.LoginValidator(&data)
-	if validationsError == nil {
+	//validationsError := validations.LoginValidator(&data)
 		r, err := bm.Login(&data, pg_db)
 		if err != nil {
 			errCode := helpers.ErrorCode(err.Error())
@@ -114,11 +113,7 @@ func (c *CustomerController) Login(){
 		} else {
 			c.Data["json"] = r
 		}
-	}else{
-		errCode := helpers.ErrorCode(validationsError.Error())
-		c.Ctx.ResponseWriter.WriteHeader(errCode)
-		c.Data["json"] = "Registration JSON Parse Error"
-	}
+	
 	c.ServeJSON()
 }
 
@@ -127,7 +122,7 @@ func (c *CustomerController) Login(){
 // @Param	cid path string true "CustomerID to get"
 // @Success 200 {string} Logout Successful!
 // @Failure 400 no customer logged in
-// @router / [put]
+// @router /logout/:cid [post]
 func (c *CustomerController) Logout(){
 	//Connect to database
 	pg_db := db.Connect()
