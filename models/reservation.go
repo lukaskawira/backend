@@ -11,6 +11,7 @@ import (
 	TABLE reservation_table
 	FIELD			DATA
 	reservationid	string
+	customerid		string
 	guestname		string
 	numberofpeople	string
 	phonenumber		string
@@ -22,6 +23,7 @@ import (
 */
 type Reservation struct {
 	ReservationID	string
+	CustomerID		string		`json:"CustomerID"`
 	Guestname       string 		`json:"Guestname"`
 	Numberofpeople  string 		`json:"Numberofpeople"`
 	Phonenumber     string 		`json:"Phonenumber"`
@@ -35,6 +37,7 @@ type Reservation struct {
 func InsertReservation(r *Reservation, ref * pg.DB) (string, error) {
 	res := &db.ReservationTable{
 		ReservationID: r.Reservationdate + r.Guestname + r.Tablenumber,
+		CustomerID: r.CustomerID,
 		Guestname: r.Guestname,
 		Numberofpeople: r.Numberofpeople,
 		Phonenumber: r.Phonenumber,
@@ -76,6 +79,22 @@ func GetReservationByID(resid string, ref * pg.DB) (*db.ReservationTable, error)
 	}
 
 	r, err := res.GetRes(ref)
+	if err != nil {
+		return nil, err
+	}else{
+		return r, nil
+	}
+}
+
+//Find an Existing Reservation by CustomerID
+func GetReservationByCustomerID(cusid string, ref * pg.DB) (*db.ReservationTable, error) {
+
+	//Get a reservation by ReservationID
+	res := &db.ReservationTable{
+		CustomerID: cusid,
+	}
+
+	r, err := res.GetResByCustomerID(ref)
 	if err != nil {
 		return nil, err
 	}else{

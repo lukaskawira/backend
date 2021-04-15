@@ -42,10 +42,8 @@ func CreateCustomerTable(db *pg.DB) error {
 	if err != nil {
 		log.Printf("error in customer table creation, because : %v\n", err)
 		return err
-	} else {
-		log.Println("customer table has been created")
-		return nil
 	}
+	return nil
 }
 
 //Insert into database

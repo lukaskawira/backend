@@ -24,6 +24,7 @@ import (
 type ReservationTable struct {
 	tableName 		struct{} 	`sql:"reservation_table"`
 	ReservationID	string 		`sql:"reservationid,pk"`
+	CustomerID		string		`sql:"customerid"`
 	Guestname       string 		`sql:"guestname"`
 	Numberofpeople  string 		`sql:"numberofpeople"`
 	Phonenumber     string 		`sql:"phonenumber"`
@@ -43,10 +44,8 @@ func CreateReservationTable(db *pg.DB) error {
 	if err != nil {
 		log.Printf("error in reservation table creation, because : %v\n", err)
 		return err
-	} else {
-		log.Println("reservation table has been created")
-		return nil
 	}
+	return nil
 }
 
 //Insert into database
@@ -89,6 +88,18 @@ func (r *ReservationTable) Delete(db *pg.DB) (string, error) {
 //Get reservation by reservation id
 func (r *ReservationTable) GetRes(db *pg.DB) (*ReservationTable, error) {
 	err := db.Select(r)
+	if err != nil {
+		log.Printf("error getting reservation by id, because : %v\n", err)
+		return nil, err
+	}else{
+		log.Printf("get reservation successful for %v\n", r.ReservationID)
+		return r, nil
+	}
+}
+
+//Get reservation by reservation id
+func (r *ReservationTable) GetResByCustomerID(db *pg.DB) (*ReservationTable, error) {
+	err := db.Model(r).Where("customerid = ?customerid").Select()
 	if err != nil {
 		log.Printf("error getting reservation by id, because : %v\n", err)
 		return nil, err
