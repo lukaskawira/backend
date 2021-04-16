@@ -29,6 +29,7 @@ func createTable(p *pg.DB) error {
 	//Init Table
 	CreateCustomerTable(p)
 	CreateReservationTable(p)
+	CreateContactTable(p)
 
 	return nil
 }

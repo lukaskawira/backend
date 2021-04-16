@@ -26,6 +26,11 @@ func init() {
 				&controllers.CustomerController{},
 			),
 		),
+		beego.NSNamespace("/con",
+			beego.NSInclude(
+				&controllers.ContactController{},
+			),
+		),
 	)
 	beego.AddNamespace(ns)
 	beego.Router("/", &controllers.MainController{})
