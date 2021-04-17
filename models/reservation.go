@@ -132,3 +132,38 @@ func customTimeVal(t string) (string) {
 	}
 	return ""
 }
+
+//CUSTOMER TIME VALUE RETURN
+func returnTimeVal(t string) (string) {
+	if t == "1" {
+		return "10:00"
+	}
+	if t == "2" {
+		return "11:00"
+	}
+	if t == "3" {
+		return "12:00"
+	}
+	if t == "4" {
+		return "13:00"
+	}
+	if t == "5" {
+		return "14:00"
+	}
+	if t == "6" {
+		return "15:00"
+	}
+	if t == "7" {
+		return "16:00"
+	}
+	if t == "8" {
+		return "17:00"
+	}
+	if t == "9" {
+		return "18:00"
+	}
+	if t == "10" {
+		return "19:00"
+	}
+	return ""
+}

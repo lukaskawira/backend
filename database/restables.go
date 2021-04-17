@@ -106,7 +106,7 @@ func (r *Reservation) GetResByCustomerID(db *pg.DB) (*Reservation, error) {
 		log.Printf("error getting reservation by customer id, because : %v\n", err)
 		return nil, err
 	}else{
-		log.Printf("getting reservation successful for %v\n", r.ReservationID)
+		log.Printf("getting reservation successful for %v\n", r)
 		return r, nil
 	}
 }

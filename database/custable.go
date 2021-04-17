@@ -83,7 +83,7 @@ func (r *CustomerTable) Delete(db *pg.DB) (string, error) {
 	}
 }
 
-//Get all customer
+//Get customer by customer id
 func (r *CustomerTable) GetCust(db *pg.DB) (*CustomerTable, error) {
 	err := db.Select(r)
 	if err != nil {
