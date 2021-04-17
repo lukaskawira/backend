@@ -29,7 +29,7 @@ type CustomerTable struct {
 	Password	    string 		`sql:"password"`
 	Email           string 		`sql:"email"`
 	Phonenumber		string 		`sql:"phonenumber"`
-	Rescreated		time.Time	`sql:"datecreated"`
+	Datecreated		time.Time	`sql:"datecreated"`
 	IsLogin			bool		`sql:"islogin"`
 }
 
@@ -83,7 +83,7 @@ func (r *CustomerTable) Delete(db *pg.DB) (string, error) {
 	}
 }
 
-//Get customer by customer id
+//Get all customer
 func (r *CustomerTable) GetCust(db *pg.DB) (*CustomerTable, error) {
 	err := db.Select(r)
 	if err != nil {

@@ -7,35 +7,9 @@ import (
 	pg "github.com/go-pg/pg"
 )
 
-/*
-	TABLE reservation_table
-	FIELD			DATA
-	reservationid	string
-	customerid		string
-	guestname		string
-	numberofpeople	string
-	phonenumber		string
-	email			string
-	reservationdate	string
-	reservationtime	string
-	tablenumber		string
-	rescreated		time.Time
-*/
-type Reservation struct {
-	ReservationID	string
-	CustomerID		string		`json:"CustomerID"`
-	Guestname       string 		`json:"Guestname"`
-	Numberofpeople  string 		`json:"Numberofpeople"`
-	Phonenumber     string 		`json:"Phonenumber"`
-	Email           string 		`json:"Email"`
-	Reservationdate string 		`json:"Reservationdate"`
-	Reservationtime string 		`json:"Reservationtime"`
-	Tablenumber     string 		`json:"Tablenumber"`
-}
-
 //Add new reservation
-func InsertReservation(r *Reservation, ref * pg.DB) (string, error) {
-	res := &db.ReservationTable{
+func InsertReservation(r *db.Reservation, ref * pg.DB) (string, error) {
+	res := &db.Reservation{
 		ReservationID: r.Reservationdate + r.Guestname + r.Tablenumber,
 		CustomerID: r.CustomerID,
 		Guestname: r.Guestname,
@@ -43,9 +17,10 @@ func InsertReservation(r *Reservation, ref * pg.DB) (string, error) {
 		Phonenumber: r.Phonenumber,
 		Email: r.Email,
 		Reservationdate: r.Reservationdate,
-		Reservationtime: r.Reservationtime,
+		Reservationtime: customTimeVal(r.Reservationtime),
 		Tablenumber: r.Tablenumber,
 		Rescreated: time.Now(),
+		Status: "HOLD",
 	}
 	result, err := res.SaveAndReturn(ref)
 	if err != nil {
@@ -56,13 +31,14 @@ func InsertReservation(r *Reservation, ref * pg.DB) (string, error) {
 }
 
 //Delete existing reservation
-func DeleteReservation(resid string, ref * pg.DB) (string, error) {
+func CancelReservation(resid string, ref * pg.DB) (string, error) {
 	
-	res := &db.ReservationTable{
+	res := &db.Reservation{
 		ReservationID: resid,
+		Status: "CANCEL",
 	}
 
-	s, err := res.Delete(ref)
+	s, err := res.Cancel(ref)
 	if err != nil {
 		return "", err
 	} else {
@@ -71,10 +47,10 @@ func DeleteReservation(resid string, ref * pg.DB) (string, error) {
 }
 
 //Find an Existing Reservation
-func GetReservationByID(resid string, ref * pg.DB) (*db.ReservationTable, error) {
+func GetReservationByID(resid string, ref * pg.DB) (*db.Reservation, error) {
 
 	//Get a reservation by ReservationID
-	res := &db.ReservationTable{
+	res := &db.Reservation{
 		ReservationID: resid,
 	}
 
@@ -87,10 +63,10 @@ func GetReservationByID(resid string, ref * pg.DB) (*db.ReservationTable, error)
 }
 
 //Find an Existing Reservation by CustomerID
-func GetReservationByCustomerID(cusid string, ref * pg.DB) (*db.ReservationTable, error) {
+func GetReservationByCustomerID(cusid string, ref * pg.DB) (*db.Reservation, error) {
 
 	//Get a reservation by ReservationID
-	res := &db.ReservationTable{
+	res := &db.Reservation{
 		CustomerID: cusid,
 	}
 
@@ -103,9 +79,9 @@ func GetReservationByCustomerID(cusid string, ref * pg.DB) (*db.ReservationTable
 }
 
 //Find an Existing Reservation by CustomerID
-func GetRess(cusid string, ref * pg.DB) ([]*db.ReservationTable, error) {
+func GetRess(cusid string, ref * pg.DB) ([]*db.Reservation, error) {
 	//Get a reservation by ReservationID
-	res := &db.ReservationTable{
+	res := &db.Reservation{
 		CustomerID: cusid,
 	}
 
@@ -115,4 +91,44 @@ func GetRess(cusid string, ref * pg.DB) ([]*db.ReservationTable, error) {
 	}else{
 		return result, nil
 	}
+}
+
+//get reservation by d {today's date} and t {table number}
+func IsBooked(d string, t string, ref *pg.DB) ([]*db.Reservation, error) {
+	return nil, nil
+}
+
+//CUSTOMER TIME VALUE INPUT
+func customTimeVal(t string) (string) {
+	if t == "10:00" {
+		return "1"
+	}
+	if t == "11:00" {
+		return "2"
+	}
+	if t == "12:00" {
+		return "3"
+	}
+	if t == "13:00" {
+		return "4"
+	}
+	if t == "14:00" {
+		return "5"
+	}
+	if t == "15:00" {
+		return "6"
+	}
+	if t == "16:00" {
+		return "7"
+	}
+	if t == "17:00" {
+		return "8"
+	}
+	if t == "18:00" {
+		return "9"
+	}
+	if t == "19:00" {
+		return "10"
+	}
+	return ""
 }

@@ -21,18 +21,20 @@ import (
 	tablenumber		string
 	rescreated		time.Time
 */
-type ReservationTable struct {
+type Reservation struct {
 	tableName 		struct{} 	`sql:"reservation_table"`
 	ReservationID	string 		`sql:"reservationid,pk"`
-	CustomerID		string		`sql:"customerid"`
-	Guestname       string 		`sql:"guestname"`
-	Numberofpeople  string 		`sql:"numberofpeople"`
-	Phonenumber     string 		`sql:"phonenumber"`
-	Email           string 		`sql:"email"`
-	Reservationdate string 		`sql:"reservationdate"`
-	Reservationtime string 		`sql:"reservationtime"`
-	Tablenumber     string 		`sql:"tablenumber"`
+	CustomerID		string		`sql:"customerid" json:"CustomerID"`
+	Guestname       string 		`sql:"guestname" json:"Guestname"`
+	Numberofpeople  string 		`sql:"numberofpeople" json:"Numberofpeople"`
+	Phonenumber     string 		`sql:"phonenumber" json:"Phonenumber"`
+	Email           string 		`sql:"email" json:"Email"`
+	Reservationdate string 		`sql:"reservationdate" json:"Reservationdate"`
+	Reservationtime string 		`sql:"reservationtime" json:"Reservationtime"`
+	Tablenumber     string 		`sql:"tablenumber" json:"Tablenumber"`
 	Rescreated		time.Time	`sql:"rescreated"`
+	Status			string		`sql:"status"`
+
 }
 
 //Create table
@@ -40,7 +42,7 @@ func CreateReservationTable(db *pg.DB) error {
 	opt := &orm.CreateTableOptions{
 		IfNotExists: true,
 	}
-	err := db.CreateTable(&ReservationTable{}, opt)
+	err := db.CreateTable(&Reservation{}, opt)
 	if err != nil {
 		log.Printf("error in reservation table creation, because : %v\n", err)
 		return err
@@ -49,7 +51,7 @@ func CreateReservationTable(db *pg.DB) error {
 }
 
 //Insert into database
-func (r *ReservationTable) Save(db *pg.DB) error {
+func (r *Reservation) Save(db *pg.DB) error {
 	err := db.Insert(r)
 	if err != nil {
 		log.Printf("error inserting new data into database, becase : %v\n", err)
@@ -61,7 +63,7 @@ func (r *ReservationTable) Save(db *pg.DB) error {
 }
 
 //Insert into database and get a return value
-func (r *ReservationTable) SaveAndReturn(db *pg.DB) (*ReservationTable, error) {
+func (r *Reservation) SaveAndReturn(db *pg.DB) (*Reservation, error) {
 	result, err := db.Model(r).Returning("*").Insert()
 	if err != nil {
 		log.Printf("error inserting new data into database, because : %v\n", err)
@@ -73,20 +75,20 @@ func (r *ReservationTable) SaveAndReturn(db *pg.DB) (*ReservationTable, error) {
 	}
 }
 
-//Delete reservation by reservation id
-func (r *ReservationTable) Delete(db *pg.DB) (string, error) {
-	_, err := db.Model(r).Where("reservationid = ?reservationid").Delete()
+//Cancel reservation by reservation id
+func (r *Reservation) Cancel(db *pg.DB) (string, error) {
+	_, err := db.Model(r).Set("status = ?status").Where("reservationid = ?reservationid").Update()
 	if err != nil {
-		log.Printf("error deleting reservation, because : %v\n", err)
+		log.Printf("error cancelling reservation, because : %v\n", err)
 		return "", err
 	} else {
-		log.Printf("the reservation %s  has been deleted sucessfully\n", r.ReservationID)
+		log.Printf("the reservation %s  has been canceled sucessfully\n", r.ReservationID)
 		return r.ReservationID, nil
 	}
 }
 
 //Get reservation by reservation id
-func (r *ReservationTable) GetRes(db *pg.DB) (*ReservationTable, error) {
+func (r *Reservation) GetRes(db *pg.DB) (*Reservation, error) {
 	err := db.Select(r)
 	if err != nil {
 		log.Printf("error getting reservation by id, because : %v\n", err)
@@ -97,24 +99,24 @@ func (r *ReservationTable) GetRes(db *pg.DB) (*ReservationTable, error) {
 	}
 }
 
-//Get reservation by reservation id
-func (r *ReservationTable) GetResByCustomerID(db *pg.DB) (*ReservationTable, error) {
-	err := db.Model(r).Where("customerid = ?customerid").Select()
+//Get reservation by customer id
+func (r *Reservation) GetResByCustomerID(db *pg.DB) (*Reservation, error) {
+	err := db.Model(r).Where("customerid = ?customerid AND status = 'HOLD'").Select()
 	if err != nil {
-		log.Printf("error getting reservation by id, because : %v\n", err)
+		log.Printf("error getting reservation by customer id, because : %v\n", err)
 		return nil, err
 	}else{
-		log.Printf("get reservation successful for %v\n", r.ReservationID)
+		log.Printf("getting reservation successful for %v\n", r.ReservationID)
 		return r, nil
 	}
 }
 
 //Get reservation by reservation id, multiple rows
-func (r *ReservationTable) GetRess(db *pg.DB) ([]*ReservationTable, error) {
-	result := []*ReservationTable{}
+func (r *Reservation) GetRess(db *pg.DB) ([]*Reservation, error) {
+	result := []*Reservation{}
 	err := db.Model(r).
 		Where("customerid = ?customerid").
-		ForEach(func(t *ReservationTable) error {
+		ForEach(func(t *Reservation) error {
 			log.Println(t)
 			result = append(result, t)
 			return nil

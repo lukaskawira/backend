@@ -1,7 +1,7 @@
 package validations
 
 import (
-	"backend/models"
+	db "backend/database"
 	"errors"
 )
 
@@ -16,7 +16,7 @@ import (
 	Reservationtime string `json:"ReservationTime"`
 	Tablenumber		string `json:"TableNumber"`
 */
-func ReservationValidator(r *models.Reservation) error {
+func ReservationValidator(r *db.Reservation) error {
 	if r.Guestname == "" {
 		return errors.New("guestname is required")
 	}

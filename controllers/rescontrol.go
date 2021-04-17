@@ -22,7 +22,7 @@ func (c *ReservationController) Post() {
 	//Connect to database
 	pg_db := db.Connect()
 
-	var data bm.Reservation 	//init a variable data with struct bm.reservation
+	var data db.Reservation 	//init a variable data with struct bm.reservation
 	json.Unmarshal(c.Ctx.Input.RequestBody, &data) 	//&data is a json object
 	validationsError := validations.ReservationValidator(&data)
 	if validationsError == nil {
@@ -53,7 +53,7 @@ func (c *ReservationController) Delete() {
 	resid := c.GetString(":rid")
 	if resid != "" {
 		//NOT EMPTY STRING
-		r, err := bm.DeleteReservation(resid, pg_db)
+		r, err := bm.CancelReservation(resid, pg_db)
 		if err != nil {
 			errCode := helpers.ErrorCode(err.Error())
 			c.Ctx.ResponseWriter.WriteHeader(errCode)

@@ -41,7 +41,7 @@ func InsertCustomer(r *Customer, ref * pg.DB) (string, error) {
 		Password: r.Password,
 		Email: r.Email,
 		Phonenumber: r.Phonenumber,
-		Rescreated: time.Now(),
+		Datecreated: time.Now(),
 		IsLogin: false,
 	}
 	result, err := res.SaveAndReturn(ref)
