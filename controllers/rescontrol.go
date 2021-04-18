@@ -84,6 +84,8 @@ func (c *ReservationController) Get() {
 		}else{
 			c.Data["json"] = r
 		}
+	} else{
+		c.Data["json"] = "Fatal Error"
 	}
 	c.ServeJSON()
 }
@@ -92,7 +94,8 @@ func (c *ReservationController) Get() {
 // @Description get reservation data by customerid
 // @Param	cid path string true "CustomerID as parameter"
 // @Success {string} Data obtained successfully
-// @router /gcust/:cid [get]
+// @Failure something went wrong
+// @router /gcust/:cid [post]
 func (c *ReservationController) GetResByCustomerID() {
 	//Connect to database
 	pg_db := db.Connect()
@@ -108,11 +111,40 @@ func (c *ReservationController) GetResByCustomerID() {
 		}else{
 			c.Data["json"] = r
 		}
+	} else {
+		c.Data["json"] = "Something Wrong"
 	}
 	c.ServeJSON()
 }
 
-// @Title GetRess
+// @Title RealtimeGet
+// @Desc Get reservation data by reservation date, tablenumber, and status parameter that was sent as JSON object
+// @Success 200 {object} []*db.Reservation
+// @Failure 400 {string} error getting data with requested parameter
+// @router /realt/ [post]
+func (r *ReservationController) RealtimeGet(){
+	pg_db := db.Connect()
+
+	var data db.Reservation
+	json.Unmarshal(r.Ctx.Input.RequestBody, &data)
+	validationsError := validations.ValidateData(&data)
+
+	if validationsError == nil {
+		container, err := bm.GetBookedTable(&data, pg_db)
+		if err != nil {
+			errCode := helpers.ErrorCode(err.Error())
+			r.Ctx.ResponseWriter.WriteHeader(errCode)
+			r.Data["json"] = err.Error()
+		} else {
+			r.Data["json"] = container
+		}
+	} else {
+		r.Data["json"] = "Data Invalid"
+	}
+	r.ServeJSON()
+}
+
+/* // @Title GetRess
 // @Description get reservation data by customerid for multiple rows
 // @Param	cid path string true "CustomerID as parameter"
 // @router /gcusts/:cid [get]
@@ -133,4 +165,4 @@ func (c *ReservationController) GetRess() {
 		}
 	}
 	c.ServeJSON()
-}
+} */

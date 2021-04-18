@@ -23,7 +23,8 @@ import (
 */
 type Reservation struct {
 	tableName 		struct{} 	`sql:"reservation_table"`
-	ReservationID	string 		`sql:"reservationid,pk"`
+	ID				int			`sql:"id,serial,pk"`
+	ReservationID	string 		`sql:"reservationid"`
 	CustomerID		string		`sql:"customerid" json:"CustomerID"`
 	Guestname       string 		`sql:"guestname" json:"Guestname"`
 	Numberofpeople  string 		`sql:"numberofpeople" json:"Numberofpeople"`
@@ -111,21 +112,36 @@ func (r *Reservation) GetResByCustomerID(db *pg.DB) (*Reservation, error) {
 	}
 }
 
-//Get reservation by reservation id, multiple rows
-func (r *Reservation) GetRess(db *pg.DB) ([]*Reservation, error) {
-	result := []*Reservation{}
-	err := db.Model(r).
-		Where("customerid = ?customerid").
-		ForEach(func(t *Reservation) error {
-			log.Println(t)
-			result = append(result, t)
-			return nil
-		})
+// //Get reservation by reservation id, multiple rows
+// func (r *Reservation) GetRess(db *pg.DB) ([]*Reservation, error) {
+// 	result := []*Reservation{}
+// 	err := db.Model(r).
+// 		Where("customerid = ?customerid").
+// 		ForEach(func(t *Reservation) error {
+// 			log.Println(t)
+// 			result = append(result, t)
+// 			return nil
+// 		})
+// 	if err != nil {
+// 		log.Printf("error getting reservation by id, because : %v\n", err)
+// 		return nil, err
+// 	}else{
+// 		log.Printf("get reservation successful for %v\n", r.ReservationID)
+// 		return result, nil
+// 	}
+// }
+
+//Get table reservation with parameter table number, reservation date, and where the reservations status is on HOLD
+func (t *Reservation) GetBookedTable(db *pg.DB,resdate string, tnum string) ([]*Reservation,error) {
+
+	var result []*Reservation
+	_, err := db.Query(&result, `SELECT * FROM reservation_table WHERE reservationdate IN (?) AND tablenumber IN (?) AND status = 'HOLD'`, resdate, tnum)
+
 	if err != nil {
-		log.Printf("error getting reservation by id, because : %v\n", err)
+		log.Printf("error getting booked table because %v\n",err)
 		return nil, err
-	}else{
-		log.Printf("get reservation successful for %v\n", r.ReservationID)
-		return result, nil
+	} else {
+		log.Printf("get booked table successful")
+		return result ,nil
 	}
 }

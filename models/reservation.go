@@ -17,7 +17,7 @@ func InsertReservation(r *db.Reservation, ref * pg.DB) (string, error) {
 		Phonenumber: r.Phonenumber,
 		Email: r.Email,
 		Reservationdate: r.Reservationdate,
-		Reservationtime: customTimeVal(r.Reservationtime),
+		Reservationtime: r.Reservationtime,
 		Tablenumber: r.Tablenumber,
 		Rescreated: time.Now(),
 		Status: "HOLD",
@@ -78,92 +78,27 @@ func GetReservationByCustomerID(cusid string, ref * pg.DB) (*db.Reservation, err
 	}
 }
 
-//Find an Existing Reservation by CustomerID
-func GetRess(cusid string, ref * pg.DB) ([]*db.Reservation, error) {
-	//Get a reservation by ReservationID
-	res := &db.Reservation{
-		CustomerID: cusid,
-	}
+// //Find an Existing Reservation by CustomerID
+// func GetRess(cusid string, ref * pg.DB) ([]*db.Reservation, error) {
+// 	//Get a reservation by ReservationID
+// 	res := &db.Reservation{
+// 		CustomerID: cusid,
+// 	}
 
-	result, err := res.GetRess(ref)
+// 	result, err := res.GetRess(ref)
+// 	if err != nil {
+// 		return nil, err
+// 	}else{
+// 		return result, nil
+// 	}
+// }
+
+func GetBookedTable(t *db.Reservation, ref *pg.DB) ([]*db.Reservation, error) {
+
+	result, err := t.GetBookedTable(ref,t.Reservationdate, t.Tablenumber)
 	if err != nil {
 		return nil, err
-	}else{
-		return result, nil
+	} else {
+		return result, err
 	}
-}
-
-//get reservation by d {today's date} and t {table number}
-func IsBooked(d string, t string, ref *pg.DB) ([]*db.Reservation, error) {
-	return nil, nil
-}
-
-//CUSTOMER TIME VALUE INPUT
-func customTimeVal(t string) (string) {
-	if t == "10:00" {
-		return "1"
-	}
-	if t == "11:00" {
-		return "2"
-	}
-	if t == "12:00" {
-		return "3"
-	}
-	if t == "13:00" {
-		return "4"
-	}
-	if t == "14:00" {
-		return "5"
-	}
-	if t == "15:00" {
-		return "6"
-	}
-	if t == "16:00" {
-		return "7"
-	}
-	if t == "17:00" {
-		return "8"
-	}
-	if t == "18:00" {
-		return "9"
-	}
-	if t == "19:00" {
-		return "10"
-	}
-	return ""
-}
-
-//CUSTOMER TIME VALUE RETURN
-func returnTimeVal(t string) (string) {
-	if t == "1" {
-		return "10:00"
-	}
-	if t == "2" {
-		return "11:00"
-	}
-	if t == "3" {
-		return "12:00"
-	}
-	if t == "4" {
-		return "13:00"
-	}
-	if t == "5" {
-		return "14:00"
-	}
-	if t == "6" {
-		return "15:00"
-	}
-	if t == "7" {
-		return "16:00"
-	}
-	if t == "8" {
-		return "17:00"
-	}
-	if t == "9" {
-		return "18:00"
-	}
-	if t == "10" {
-		return "19:00"
-	}
-	return ""
 }
