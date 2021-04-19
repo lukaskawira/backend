@@ -1,3 +1,6 @@
+/*
+	Code generated when creating a new bee project
+*/
 package controllers
 
 import (

@@ -22,11 +22,11 @@ func InsertReservation(r *db.Reservation, ref * pg.DB) (string, error) {
 		Rescreated: time.Now(),
 		Status: "HOLD",
 	}
-	result, err := res.SaveAndReturn(ref)
+	err := res.Save(ref)
 	if err != nil {
 		return "", err
 	} else {
-		return result.ReservationID, nil
+		return res.ReservationID, nil
 	}
 }
 
@@ -77,21 +77,6 @@ func GetReservationByCustomerID(cusid string, ref * pg.DB) (*db.Reservation, err
 		return r, nil
 	}
 }
-
-// //Find an Existing Reservation by CustomerID
-// func GetRess(cusid string, ref * pg.DB) ([]*db.Reservation, error) {
-// 	//Get a reservation by ReservationID
-// 	res := &db.Reservation{
-// 		CustomerID: cusid,
-// 	}
-
-// 	result, err := res.GetRess(ref)
-// 	if err != nil {
-// 		return nil, err
-// 	}else{
-// 		return result, nil
-// 	}
-// }
 
 func GetBookedTable(t *db.Reservation, ref *pg.DB) ([]*db.Reservation, error) {
 

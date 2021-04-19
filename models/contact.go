@@ -2,7 +2,6 @@ package models
 
 import (
 	db "backend/database"
-	"log"
 	"time"
 
 	pg "github.com/go-pg/pg"
@@ -20,7 +19,6 @@ func InsertData(c *db.Contact, ref *pg.DB) error {
 	}
 	err := temp.Save(ref)
 	if err!=nil{
-		log.Fatal(err)
 		return err
 	} else{
 		return nil
