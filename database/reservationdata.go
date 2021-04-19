@@ -89,7 +89,7 @@ func (r *Reservation) Cancel(db *pg.DB) (string, error) {
 
 	//If function returns error
 	if err != nil {
-		log.Println("error canceling reservation for id " + temp)
+		log.Printf("error canceling reservation for id %v\n" + temp)
 		log.Printf("because %v\n",err)
 		log.Panic(err)
 		
@@ -116,7 +116,7 @@ func (r *Reservation) GetRes(db *pg.DB) (*Reservation, error) {
 
 	//If an error was produced
 	if err != nil {
-		log.Println("error getting reservation for id " + temp)
+		log.Printf("error getting reservation for id %v\n" + temp)
 		log.Printf("because %v\n",err)
 		log.Panic(err)
 
@@ -124,7 +124,7 @@ func (r *Reservation) GetRes(db *pg.DB) (*Reservation, error) {
 		return nil, err
 	}else{
 		//If the data is successfully retracted
-		log.Printf("succeed in getting reservation with id %v \n", temp)
+		log.Printf("succeed in getting reservation with id %v\n", temp)
 		
 		//Returns the selected reservation rows and no error
 		return r, nil
@@ -145,9 +145,7 @@ func (r *Reservation) GetResByCustomerID(db *pg.DB) (*Reservation, error) {
 
 	//If function returns error
 	if err != nil {
-		log.Println("no booking was being holded for customer " + temp)
-		log.Printf("because %v\n",err)
-		log.Panic(err)
+		log.Println("no booking was being holded for customer %v\n" + temp)
 
 		//Returns empty object indication no reservation could be selected
 		//or no reservation has been made and error

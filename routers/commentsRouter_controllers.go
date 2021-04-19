@@ -72,9 +72,9 @@ func init() {
 
     beego.GlobalControllerRouter["backend/controllers:ReservationController"] = append(beego.GlobalControllerRouter["backend/controllers:ReservationController"],
         beego.ControllerComments{
-            Method: "Delete",
+            Method: "Cancel",
             Router: "/:rid",
-            AllowHTTPMethods: []string{"delete"},
+            AllowHTTPMethods: []string{"post"},
             MethodParams: param.Make(),
             Filters: nil,
             Params: nil})

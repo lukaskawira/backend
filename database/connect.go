@@ -39,10 +39,10 @@ func Connect() *pg.DB {
 	if db == nil {
 		log.Println("connection to database failed")
 		os.Exit(100)
+	} else {
+		//If database is not empty then we can assume the connection is successful
+		log.Println("connection to database successful")
 	}
-
-	//If database is not empty then we can assume the connection is successful
-	log.Println("connection to database successful")	//connected to database
 
 	//Call a function create table
 	createTable(db)
