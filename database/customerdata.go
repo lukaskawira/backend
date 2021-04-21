@@ -126,23 +126,30 @@ func (r *Customer) GetCust(db *pg.DB) (*Customer, error) {
 //Update customer login status to true
 //where the customer id and the password matches on what the database stored
 func (c *Customer) Login(db *pg.DB) error {
-	
 	//Update the values in the database by parameters, in postgres query:
 	//UPDATE customer_table SET islogin = (?) WHERE customerid = (?) AND password = (?);
-	_ , err := db.Model(c).Set("islogin = ?islogin").Where("customerid = ?customerid AND password = ?password").Update()
+	t , err := db.Model(c).Set("islogin = ?islogin").Where("customerid = ?customerid AND password = ?password").Update()
 	
-	//If update returns an error
+	//If query returns an error
 	if err != nil {
 		log.Printf("error updating customer %v login status to the database\n" + c.CustomerID)
 		log.Printf("because %v\n",err)
 		log.Panic(err)
 		return err
 	}else{
-		//If update succeeded
-		log.Printf("login status updated for customer %v\n", c.CustomerID)
-
-		//Returns nil as counter
-		return nil
+		//Means if no rows were update,
+		//this happens because the where condition does not match
+		if (t.RowsAffected()==0){
+			log.Printf("error logging in customer %v\n", c.CustomerID)
+			log.Println("due to invalid email/password")
+			err = pg.ErrNoRows
+			return err
+		} else {
+			log.Printf("customer %v has successfully logged in\n", c.CustomerID)
+			log.Printf("login status updated for customer %v\n", c.CustomerID)
+			//Returns nil as counter
+			return nil
+		}
 	}
 }
 

@@ -134,7 +134,7 @@ func (c *CustomerController) Get() {
 // @Description Customer login with email and password
 // @Success 200 {string} Login Successful!
 // @Failure 400 {string} Login credential are invalid!
-// @router /login [post]
+// @router /login/ [post]
 func (c *CustomerController) Login(){
 	//Initiate connection to database and store the referenced 
 	//database in pg_db variable
