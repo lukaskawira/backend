@@ -95,42 +95,6 @@ func (c *ReservationController) Cancel() {
 	c.ServeJSON()
 }
 
-// @Title Get
-// @Description Get reservation details by ReservationID
-// @Param	rid path string true "ReservationID reference to get"
-// @Success 200 {object} db.Reservation
-// @Failure 400 {string} No Reservation ID was passed
-// @router /:rid [get]
-func (c *ReservationController) Get() {
-	//Initiate connection to database and store the referenced 
-	//database in pg_db variable
-	pg_db := db.Connect()
-
-
-	//Store the reservation id from the url path referencing :rid
-	resid := c.GetString(":rid")
-
-	//If reservation id is not empty
-	if resid != "" {
-		//Store output of GetReservationByID function in r and err variable
-		//where r is Resrvation object and err is error container
-		r, err := bm.GetReservationByID(resid,pg_db)
-
-		//If there is an error
-		if err != nil {
-			errCode := help.ErrorCode(err.Error())
-			c.Ctx.ResponseWriter.WriteHeader(errCode)
-			c.Data["json"] = err.Error()
-		}else{
-			//If there is no error
-			c.Data["json"] = r
-		}
-	} else{
-		c.Data["json"] = "No reservation ID was passed on the url path"
-	}
-	c.ServeJSON()
-}
-
 // @Title GetResByCustomerID
 // @Description Get reservation by customer id
 // @Param	cid path string true "CustomerID reference to get"

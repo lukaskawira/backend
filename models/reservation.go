@@ -46,22 +46,6 @@ func CancelReservation(resid string, ref * pg.DB) (string, error) {
 	}
 }
 
-//Find an Existing Reservation
-func GetReservationByID(resid string, ref * pg.DB) (*db.Reservation, error) {
-
-	//Get a reservation by ReservationID
-	res := &db.Reservation{
-		ReservationID: resid,
-	}
-
-	r, err := res.GetRes(ref)
-	if err != nil {
-		return nil, err
-	}else{
-		return r, nil
-	}
-}
-
 //Find an Existing Reservation by CustomerID
 func GetReservationByCustomerID(cusid string, ref * pg.DB) (*db.Reservation, error) {
 

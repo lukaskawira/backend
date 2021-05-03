@@ -81,15 +81,6 @@ func init() {
 
     beego.GlobalControllerRouter["backend/controllers:ReservationController"] = append(beego.GlobalControllerRouter["backend/controllers:ReservationController"],
         beego.ControllerComments{
-            Method: "Get",
-            Router: "/:rid",
-            AllowHTTPMethods: []string{"get"},
-            MethodParams: param.Make(),
-            Filters: nil,
-            Params: nil})
-
-    beego.GlobalControllerRouter["backend/controllers:ReservationController"] = append(beego.GlobalControllerRouter["backend/controllers:ReservationController"],
-        beego.ControllerComments{
             Method: "GetResByCustomerID",
             Router: "/gcust/:cid",
             AllowHTTPMethods: []string{"post"},

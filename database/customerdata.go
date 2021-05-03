@@ -59,7 +59,7 @@ func (c *Customer) Save(db *pg.DB) error {
 		return err
 	} else {
 		//If no error was procuced by the function, return error is nil
-		log.Printf("sucessfully registered a new customer, with reference id %v\n" + c.CustomerID)
+		log.Println("sucessfully registered a new customer, with reference id" + c.CustomerID)
 		return nil
 	}
 }
@@ -78,15 +78,16 @@ func (c *Customer) Delete(db *pg.DB) (string, error) {
 	//If an error was produced, return empty string and the error
 	if err != nil {
 		log.Println("error deleting customer data for customer " + temp)
-		log.Printf("because %v\n",err)
+		log.Printf("because %v\n", err)
 		log.Panic(err)
 
 		//Returns emptry string and error
 		return "", err
 	} else {
 		//If deletion is successful
-		log.Printf("customer %v has been deleted successfully" + c.CustomerID)
-		return "Deletion Successful", nil
+		log.Printf("customer %v has been deleted successfully", c.CustomerID)
+		str := c.CustomerID
+		return str, nil
 	}
 }
 

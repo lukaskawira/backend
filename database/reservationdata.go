@@ -89,8 +89,8 @@ func (r *Reservation) Cancel(db *pg.DB) (string, error) {
 
 	//If function returns error
 	if err != nil {
-		log.Printf("error canceling reservation for id %v\n" + temp)
-		log.Printf("because %v\n",err)
+		log.Printf("error canceling reservation for id %v\n", temp)
+		log.Printf("because %v\n", err)
 		log.Panic(err)
 		
 		//Returns emptry string and error
@@ -102,39 +102,17 @@ func (r *Reservation) Cancel(db *pg.DB) (string, error) {
 	}
 }
 
-//Get reservation with reservation id parameter. 
-//This function is used to return the form data of every reservation 
-//respective to their reservation id. The data is then passed to the front 
-//end and then the value is returned to the HTML. If a customer has made 
-//a reservation and the reservation holds true, the data will be displayed in 
-//reservation-details.html
-func (r *Reservation) GetRes(db *pg.DB) (*Reservation, error) {
-	err := db.Select(r)
+/*
+Get reservation with parameter customer id and reservation status. 
+This function focuses on restricting any customer that has an active reservation 
+with the code status = 'HOLD' to not be able to make any advance booking. The status 
+must be updated with either 'CANCEL' when canceled or 'DONE' when conditions are met.
 
-	//Temporary data holder for returning response
-	temp := r.ReservationID
-
-	//If an error was produced
-	if err != nil {
-		log.Printf("error getting reservation for id %v\n" + temp)
-		log.Printf("because %v\n",err)
-		log.Panic(err)
-
-		//Returns object nil and the error
-		return nil, err
-	}else{
-		//If the data is successfully retracted
-		log.Printf("succeed in getting reservation with id %v\n", temp)
-		
-		//Returns the selected reservation rows and no error
-		return r, nil
-	}
-}
-
-//Get reservation with parameter customer id and reservation status. 
-//This function focuses on restricting any customer that has an active reservation 
-//with the code status = 'HOLD' to not be able to make any advance booking. The status 
-//must be updated with either 'CANCEL' when canceled or 'DONE' when conditions are met.
+This function is also used to return the form data of every reservation 
+respective to their reservation id. The data is then passed to the front 
+end and then the value is returned to the HTML. If a customer has made 
+a reservation and the reservation holds true, the data will be displayed in reservation-details.html 
+*/
 func (r *Reservation) GetResByCustomerID(db *pg.DB) (*Reservation, error) {
 	//Comparing to postgres query
 	//SELECT * FROM reservation_table WHERE customerid = (?) AND status = 'HOLD';

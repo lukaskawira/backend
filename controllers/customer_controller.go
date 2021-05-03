@@ -49,7 +49,7 @@ func (c *CustomerController) Post() {
 			c.Data["json"] = err.Error()
 		} else {
 			//If there is no error
-			c.Data["json"] = "Registration successful for id " + r
+			c.Data["json"] = r + data.Email
 		}
 	} else{
 		//If there is an error when validating the data
