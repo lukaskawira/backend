@@ -119,9 +119,11 @@ func (r *Customer) GetCust(db *pg.DB) (*Customer, error) {
 /*
 	The next 2 function below is used for updating customer active status,
 	by passing the first function (login) with customer id and password as the parameter
-	this will udpate the current customer with the respective id if the password is correct the status of login equals to true
+	this will udpate the current customer with the respective id,
+	if the password is correct the status of login equals to true
 	same thing with the second function (logout), by passing the customer id as the parameter
-	indicating that the current customer wants to end his/her session, this will update the status of login equals to false
+	indicating that the current customer wants to end his/her session, 
+	this will update the status of login equals to false
 */
 
 //Update customer login status to true
@@ -129,7 +131,9 @@ func (r *Customer) GetCust(db *pg.DB) (*Customer, error) {
 func (c *Customer) Login(db *pg.DB) error {
 	//Update the values in the database by parameters, in postgres query:
 	//UPDATE customer_table SET islogin = (?) WHERE customerid = (?) AND password = (?);
-	t , err := db.Model(c).Set("islogin = ?islogin").Where("customerid = ?customerid AND password = ?password").Update()
+	t , err := db.Model(c).Set("islogin = ?islogin").
+			Where("customerid = ?customerid AND password = ?password").
+			Update()
 	
 	//If query returns an error
 	if err != nil {
@@ -176,21 +180,3 @@ func (c *Customer) Logout(db *pg.DB) error {
 		return nil
 	}
 }
-
-//This is an extra function and is unused
-func (r *Customer) SaveAndReturn(db *pg.DB) (*Customer, error) {
-	result, err := db.Model(r).Returning("*").Insert()
-	if err != nil {
-		log.Printf("error inserting new data into database, because : %v\n", err)
-		return nil, err
-	} else {
-		log.Println("registration successful")
-		log.Printf("customer details: %v\n", result)
-		return r, nil
-	}
-}
-
-
-
-
-

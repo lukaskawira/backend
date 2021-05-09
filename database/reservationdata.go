@@ -157,7 +157,8 @@ func (t *Reservation) GetBookedTable(db *pg.DB,resdate string, tnum string) ([]*
 
 	//Comparing to postgres query
 	//SELECT * FROM reservation_table WHERE tablenumber = (?) AND reservationdate = (?) AND status = 'HOLD';
-	_, err := db.Query(&result, `SELECT * FROM reservation_table WHERE reservationdate IN (?) AND tablenumber IN (?) AND status = 'HOLD'`, resdate, tnum)
+	_, err := db.Query(&result, `SELECT * FROM reservation_table WHERE reservationdate IN 
+				(?) AND tablenumber IN (?) AND status = 'HOLD'`, resdate, tnum)
 
 	//If the function returns an error
 	if err != nil {

@@ -131,7 +131,7 @@ func (c *ReservationController) GetResByCustomerID() {
 }
 
 // @Title RealtimeGet
-// @Desc Get reservation data by reservation date, tablenumber, and status parameter that was sent as JSON object
+// @Desc Get reservation data by table number and reservation date
 // @Success 200 {object} []*db.Reservation
 // @Failure 400 {string} error getting data with requested parameter
 // @router /realt/ [post]
